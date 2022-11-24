@@ -5,13 +5,13 @@ import cv2
 import apriltag
 import logging
 import argparse
-from pprint import pprint
+# from pprint import pprint
 import os.path
 import re
 from codetimer import CodeTimer
 import numpy as np
 import math
-import dt_apriltags
+# import dt_apriltags
 
 
 # in inches
@@ -191,47 +191,47 @@ def run_apriltag_lib(image_files, board, marker_centers,
 dt_detector = None
 
 
-def run_dt_apriltags_lib(image_files, board, marker_centers,
-                         output_dir=None, decimate=1.0, threads=1, refine_edges=True, maxhamming=1,
-                         marker_size=MARKER_SIZE_16):
-    '''Use the DT wrapper'''
+# def run_dt_apriltags_lib(image_files, board, marker_centers,
+#                          output_dir=None, decimate=1.0, threads=1, refine_edges=True, maxhamming=1,
+#                          marker_size=MARKER_SIZE_16):
+#     '''Use the DT wrapper'''
 
-    global dt_detector
-    found = 0
+#     global dt_detector
+#     found = 0
 
-    # print('refine', refine_edges)
-    if dt_detector is None:
-        dt_detector = dt_apriltags.Detector(families='tag36h11', quad_decimate=decimate, nthreads=threads, refine_edges=refine_edges)
+#     # print('refine', refine_edges)
+#     if dt_detector is None:
+#         dt_detector = dt_apriltags.Detector(families='tag36h11', quad_decimate=decimate, nthreads=threads, refine_edges=refine_edges)
 
-    for fn in image_files:
-        fn_base = os.path.basename(fn)
+#     for fn in image_files:
+#         fn_base = os.path.basename(fn)
 
-        with CodeTimer('image read'):
-            file_img = cv2.imread(fn)
+#         with CodeTimer('image read'):
+#             file_img = cv2.imread(fn)
 
-        cam_mat = camera_matrix(file_img.shape)
-        cam_parm = [cam_mat[0][0], cam_mat[1][1], cam_mat[0][2], cam_mat[1][2]]
+#         cam_mat = camera_matrix(file_img.shape)
+#         cam_parm = [cam_mat[0][0], cam_mat[1][1], cam_mat[0][2], cam_mat[1][2]]
 
-        with CodeTimer('grayscale'):
-            gray_img = cv2.cvtColor(file_img, cv2.COLOR_BGR2GRAY)
+#         with CodeTimer('grayscale'):
+#             gray_img = cv2.cvtColor(file_img, cv2.COLOR_BGR2GRAY)
 
-        with CodeTimer('april detect'):
-            results = dt_detector.detect(gray_img, estimate_tag_pose=True, camera_params=cam_parm,
-                                         tag_size=marker_size)
-            found += len(results)
-            ids = np.array([[x.tag_id, ] for x in results], dtype=np.int32)
-            corners = [np.array([x.corners, ], dtype=np.float32) for x in results]
+#         with CodeTimer('april detect'):
+#             results = dt_detector.detect(gray_img, estimate_tag_pose=True, camera_params=cam_parm,
+#                                          tag_size=marker_size)
+#             found += len(results)
+#             ids = np.array([[x.tag_id, ] for x in results], dtype=np.int32)
+#             corners = [np.array([x.corners, ], dtype=np.float32) for x in results]
 
-        if output_dir:
-            # print()
-            out_img = file_img.copy()
-            cv2.aruco.drawDetectedMarkers(out_img, corners, ids)
+#         if output_dir:
+#             # print()
+#             out_img = file_img.copy()
+#             cv2.aruco.drawDetectedMarkers(out_img, corners, ids)
 
-            outfile = os.path.join(output_dir, fn_base)
-            outfile = re.sub(r'\.jpg$', '.png', outfile, re.IGNORECASE)
-            cv2.imwrite(outfile, out_img)
+#             outfile = os.path.join(output_dir, fn_base)
+#             outfile = re.sub(r'\.jpg$', '.png', outfile, re.IGNORECASE)
+#             cv2.imwrite(outfile, out_img)
 
-    return found
+#     return found
 
 
 def run_opencv_lib(image_files, board, marker_centers,
