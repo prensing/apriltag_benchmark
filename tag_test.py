@@ -49,7 +49,7 @@ def markers_and_board(family):
         ids = tuple(centers.keys())
         corners = [marker_corners(centers[i], MARKER_SIZE_16) for i in ids]
 
-    board = cv2.aruco.Board.create(corners, tag_family, ids)
+    board = cv2.aruco.Board_create(corners, tag_family, ids)
 
     # print('board ids', board.getIds())
     # print('board corners', board.getObjPoints())
